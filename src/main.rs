@@ -1,29 +1,5 @@
 use std::io;
-
-fn input_u32(input_message: &str) -> u32 {
-    let result = loop {
-        println!("{}", input_message);
-
-        let mut input = String::new();
-
-        io::stdin().read_line(&mut input).expect("Failed to read from stdin!");
-
-        input = input.trim().to_string();
-
-        let cast = input.parse::<u32>();
-
-        match cast {
-            Ok(result) => {
-                break result;
-            },
-            Err(_) => {
-                println!("The value entered is not a number!");
-            }
-        }
-    };
-
-    result
-}
+use std::collections::HashMap;
 
 fn main() {
     let mut numbers: Vec<u32> = vec!();
@@ -67,5 +43,25 @@ fn main() {
         numbers[numbers.len() / 2] as f32
     };
 
-    println!("Median: {}", median)
+    println!("Median: {}", median);
+
+    let mut element_count:HashMap<u32, u32> = HashMap::new();
+
+    for number in numbers {
+        let count = element_count.entry(number).or_insert(0);
+
+        *count += 1;
+    }
+
+    let mut mode = element_count.values().next().unwrap();
+
+    for (number, count) in &element_count {
+        let max = element_count.get(&mode).unwrap();
+
+        if count > max {
+            mode = number;
+        }
+    }
+
+    println!("Mode: {}", mode)
 }
